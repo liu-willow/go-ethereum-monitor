@@ -27,11 +27,7 @@ func main() {
 	url := "wss://speedy-nodes-nyc.moralis.io/0ed910502ea1998707783a43/bsc/testnet/ws"
 	ethClient := pkg.NewServer(url)
 
-	netWorkId, err := ethClient.GetNetworkId()
-	if err != nil {
-		panic(err)
-	}
-	pkg.Chan.InLoggerChan(fmt.Sprintf("netWorkId: [%+v]", netWorkId.Int64()))
+	pkg.Chan.InLoggerChan(fmt.Sprintf("netWorkId: [%+v]", ethClient.GetNetworkId().Int64()))
 	config := pkg.NewConfig()
 	config.AddAddressWithString(os.Getenv("MarketplaceAddress"))
 

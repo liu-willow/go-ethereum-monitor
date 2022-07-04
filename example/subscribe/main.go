@@ -46,11 +46,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	netWorkId, err := subscribe.GetNetworkId()
 	if err != nil {
 		panic(err)
 	}
-	pkg.Chan.InLoggerChan(fmt.Sprintf("netWorkId: [%+v]", netWorkId.Int64()))
+	pkg.Chan.InLoggerChan(fmt.Sprintf("netWorkId: [%+v]", subscribe.GetNetworkId().Int64()))
 
 	interval, err := strconv.ParseInt(os.Getenv("LIVEINTERVAL"), 10, 64)
 	if err != nil {

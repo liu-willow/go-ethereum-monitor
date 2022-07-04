@@ -11,21 +11,30 @@ import (
 type server struct {
 	url       string
 	EthClient *ethclient.Client
+	ChanId    *big.Int
 }
 
 var s *server
 
 func NewServer(url string) *server {
-	client, err := ethclient.DialContext(context.Background(),url)
-	if err != nil {
-		panic(err)
-	}
-	s = &server{
-		url:       url,
-		EthClient: client,
+	if s == nil {
+		client, err := ethclient.DialContext(context.Background(), url)
+		if err != nil {
+			panic(err)
+		}
+		chainId, err := client.NetworkID(context.TODO())
+		if err != nil {
+			panic(err)
+		}
+		s = &server{
+			url:       url,
+			EthClient: client,
+			ChanId:    chainId,
+		}
 	}
 	return s
 }
+
 func GetServer() *server {
 	if s == nil {
 		panic("Server Not Ready")
@@ -33,19 +42,19 @@ func GetServer() *server {
 	return s
 }
 
-func (cs *server) GetBlock (blockNumber *big.Int) (*types.Block,error) {
-	return cs.EthClient.BlockByNumber(context.Background(), blockNumber)
+func (cs *server) GetBlock(blockNumber *big.Int) (*types.Block, error) {
+	return cs.EthClient.BlockByNumber(context.TODO(), blockNumber)
 }
 
-func (cs *server) GetBlockByHash (hash common.Hash) (*types.Block,error) {
-	return cs.EthClient.BlockByHash(context.Background(),hash)
+func (cs *server) GetBlockByHash(hash common.Hash) (*types.Block, error) {
+	return cs.EthClient.BlockByHash(context.TODO(), hash)
 }
 
-func (cs *server) LastBlock () (int64,error) {
-	blockNumber, err := cs.EthClient.BlockNumber(context.Background())
-	return int64(blockNumber),err
+func (cs *server) LastBlock() (int64, error) {
+	blockNumber, err := cs.EthClient.BlockNumber(context.TODO())
+	return int64(blockNumber), err
 }
 
-func (cs *server) GetNetworkId () (*big.Int,error) {
-	return cs.EthClient.NetworkID(context.Background())
+func (cs *server) GetNetworkId() *big.Int {
+	return cs.ChanId
 }
